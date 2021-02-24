@@ -15,6 +15,9 @@ services:
       /bin/bash -c
       "bin/apply-config-from-env.py conf/standalone.conf
       && bin/pulsar standalone --advertised-address standalone"
+    volumes:
+      - pulsardata:/pulsar/data
+      - pulsarconf:/pulsar/conf
   dashboard:
     image: apachepulsar/pulsar-dashboard
     depends_on:
@@ -41,3 +44,7 @@ services:
   #   depends_on:
   #     - manager
   #   restart: on-failure
+
+volumes:
+  pulsardata:
+  pulsarconf:
