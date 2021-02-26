@@ -1,6 +1,5 @@
 # source https://github.com/apache/pulsar/blob/master/docker-compose/standalone-dashboard/docker-compose.yml
-
-version: '2'
+version: '3'
 
 services:
 
@@ -9,6 +8,8 @@ services:
     expose:
       - 8080
       - 6650
+    ports:
+      - '6650:6650'
     environment:
       - BOOKIE_MEM=" -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
     command: >
@@ -23,7 +24,7 @@ services:
     depends_on:
       - standalone
     ports:
-      - "8081:80"
+      - '8081:80'
     environment:
       - SERVICE_URL=http://standalone:8080
   manager:
@@ -36,14 +37,6 @@ services:
       - '7750:7750'
     environment:
       - SPRING_CONFIGURATION_FILE=/pulsar-manager/pulsar-manager/application.properties
-  # todo fix interpolation error
-  # init:
-  #   image: curlimages/curl
-  #   command: >
-  #     CSRF_TOKEN=$(curl http://manager:7750/pulsar-manager/csrf-token) curl -H 'X-XSRF-TOKEN: $CSRF_TOKEN' -H 'Cookie: XSRF-TOKEN=$CSRF_TOKEN;' -H 'Content-Type: application/json' -X PUT http://manager:7750/pulsar-manager/users/superuser -d '{"name": "admin", "password": "apachepulsar", "description": "test", "email": "username@test.org"}'
-  #   depends_on:
-  #     - manager
-  #   restart: on-failure
 
 volumes:
   pulsardata:
